@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:bold" rel="stylesheet">
+        <style>
+            body {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+            .object {
+                display: inline-block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                transition: top 7s, left 7s;
+                transition-timing-function: linear;
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 700px;
+                font-size: 225px;
+            }
+        </style>
+        <script>
+        </script>
+
+    </head>
+    <body>
+        <div class="object">
+            Room #4
+        </div>
+        <script>
+            const body = document.querySelector('body');
+            console.log(`body:`, body.getBoundingClientRect());
+            const obj = document.querySelector('.object');
+            console.log(`obj:`, obj.getBoundingClientRect());
+            console.log(`body: ${body.width}x${body.height}`);
+            console.log(`obj: ${obj.width}x${obj.height}`);
+
+            let curPos = getRandomPosition(body.getBoundingClientRect(), obj.getBoundingClientRect(), 3);
+            setNewPosition(curPos);
+
+            setInterval(() => {
+                curPos = getRandomPosition(body.getBoundingClientRect(), obj.getBoundingClientRect(), curPos.side);
+                setNewPosition(curPos);
+                //console.log(pos);
+            }, 7000);
+
+            function setNewPosition(pos) {
+                obj.style.left = pos.left + 'px';
+                obj.style.top = pos.top + 'px';
+            }
+
+            function getRandomPosition(bodyRect, objRect, prevSide) {
+                const side = new Array(4)
+                    .fill(0)
+                    .map((_, i) => i)
+                    .filter(item => item != prevSide)[Math.floor(Math.random() * 3)];
+                console.log(`prevside ${prevSide}, new side ${side}`);
+                switch (side) {
+                    case 0: // top side
+                      return {
+                          top: 0,
+                          left: Math.random() * (bodyRect.width - objRect.width),
+                          side,
+                      };
+                    case 1: // right side
+                        return {
+                            top: Math.random() * (bodyRect.height - objRect.height),
+                            left: bodyRect.width - objRect.width,
+                            side,
+                        };
+                    case 2: // bottom side
+                        return {
+                            top: bodyRect.height - objRect.height,
+                            left: Math.random() * (bodyRect.width - objRect.width),
+                            side,
+                        };
+                    case 3: // left side
+                        return {
+                            top: Math.random() * (bodyRect.height - objRect.height),
+                            left: 0,
+                            side,
+                        };
+                }
+            }
+        </script>
+    </body>
+</html>
